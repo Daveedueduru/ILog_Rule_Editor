@@ -1,0 +1,348 @@
+.domainnav {
+  overflow: auto;
+  background-color: #ffffff;
+  position: absolute;
+  top: 75px;
+  left: 355px;
+  width: 75%;
+}
+
+.domainnav a {
+  float: left;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.domainnav a:hover {
+  color: orange;
+  text-decoration: none;
+}
+
+.domainnav a.active {
+  color: orange;
+}
+#tableHeader {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+
+  position: absolute;
+  top: 230px;
+  left: 320px;
+  overflow: scroll;
+  text-align: center;
+  width: 100%;
+}
+#tableHeaderDomain {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  text-align: center;
+  position: relative;
+  top: 170px;
+  left: 320px;
+  overflow: scroll;
+
+  width: 100%;
+}
+
+#tableHeaderRule {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse !important;
+  border: solid 1px #dddddd;
+  overflow: hidden;
+  text-align: center;
+
+  overflow: scroll;
+  table-layout: fixed;
+}
+div.tablewrapper {
+  position: relative;
+  height: 100%;
+
+  top: 280px;
+  left: 320px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#tableHeader td,
+#tableHeader th,
+#tableHeaderDomain td,
+#tableHeaderDomain th {
+  padding: 8px;
+}
+#tableHeaderRule td,
+#tableHeaderRule th {
+  padding: 8px;
+  border-bottom: 2px solid #ddd;
+  max-height: 150px;
+  overflow: hidden;
+  cursor: pointer;
+  height: 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: break-word;
+}
+
+#tableHeader tr:hover,
+#tableHeaderDomain tr:hover,
+#tableHeaderRule tr:hover {
+  background-color: #ddd;
+}
+#tableHeader th,
+#tableHeaderDomain th,
+#tableHeaderRule th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: black;
+  color: white;
+  border-bottom: 2px solid #ddd;
+  max-height: 150px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.mainnav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 280px;
+  background-color: black;
+  position: absolute;
+}
+
+.mainnav a {
+  display: block;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-family: "Lucida Sans";
+  font-size: larger;
+  line-height: 45px;
+}
+
+.mainnav a.active {
+  background-color: rgb(148, 100, 28);
+  color: rgb(248, 248, 248);
+}
+
+.mainnav a:hover {
+  background-color: rgb(148, 100, 28);
+  color: rgb(248, 248, 248);
+}
+
+.mainnav a.exact-active {
+  background-color: rgb(148, 100, 28);
+  color: rgb(248, 248, 248);
+}
+
+.mainnav {
+  padding: 30px;
+
+  position: absolute;
+  left: -30px;
+  top: 60px;
+}
+header {
+  background-color: white;
+
+  color: black;
+  position: absolute;
+  top: 5px;
+  width: 100%;
+  left: 310px;
+  height: 70px;
+  color: black;
+  text-shadow: 2px 2px 4px #858080;
+
+  font-family: "Lucida Sans";
+}
+
+header h3 {
+  position: absolute;
+  left: 350px;
+  top: 15px;
+  color: black;
+}
+
+.center {
+  text-align: center;
+  padding: 15px;
+}
+.createdomain {
+  position: absolute;
+  top: 265px;
+  left: 400px;
+  font-size: 15px;
+}
+
+.row {
+  position: relative;
+  left: 0px;
+  top: -100px;
+}
+label {
+  /* padding: 12px 12px 12px 0; */
+  display: inline-block;
+  position: relative;
+  left: 0px;
+}
+#createForm input[type="text"] {
+  position: absolute;
+  left: 200px;
+  width: 400px;
+
+  top: 0px;
+  padding: 12px;
+  border-radius: 0px;
+  box-sizing: border-box;
+  resize: vertical;
+  border: 2px solid #ccc;
+}
+
+#editForm input[type="text"] {
+  width: 75%;
+  height: 30px;
+  resize: vertical;
+
+  padding: 5px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.button {
+  position: absolute;
+  left: 390px;
+  top: 150px;
+  background-color: black;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.full {
+  background-color: black;
+  width: 280px;
+  height: 100%;
+  position: absolute;
+  top: 70px;
+  left: 0px;
+}
+.editRecordChange {
+  background-color: rgb(164, 215, 224);
+}
+.usernamepos {
+  position: absolute;
+  top: 20px;
+  left: 850px;
+}
+.formPosition {
+  position: absolute;
+  top: 160px;
+  left: 350px;
+  font-size: 15px;
+}
+.formPositionList {
+  position: relative;
+  top: 240px;
+  left: 350px;
+  font-size: 15px;
+}
+.col2 {
+  position: absolute;
+  left: 320px;
+  top: 0px;
+}
+.dropProj {
+  position: absolute;
+  left: 70px;
+  top: 13px;
+  width: 200px;
+}
+.dropTemp {
+  position: absolute;
+  left: 80px;
+  top: 13px;
+  width: 200px;
+}
+.searchBar {
+  position: absolute;
+  top: 50px;
+  left: -630px;
+  width: 270px;
+}
+#resetbtn {
+  position: absolute;
+  top: 20px;
+  left: -305px;
+  width: 100px;
+}
+
+.col3 {
+  position: absolute;
+  left: -15px;
+  top: 50px;
+}
+.col4 {
+  position: absolute;
+  left: 950px;
+  top: 12px;
+}
+.col1 {
+  position: absolute;
+  left: -15px;
+  top: 0px;
+}
+.dropDom {
+  position: absolute;
+  left: 80px;
+  top: 11px;
+  width: 200px;
+}
+#devicedropdown {
+  width: 310px;
+}
+.alignRight,
+#alignRight {
+  text-align: right;
+}
+.alignLeft,
+#alignLeft {
+  text-align: left;
+}
+.alignCenter,
+#alignCenter {
+  text-align: center;
+}
+.input-group-prepend {
+  width: 35%; /*adjust as needed*/
+}
+
+.input-group-prepend label {
+  width: 100%;
+  overflow: hidden;
+}
+
+#tableHeaderCRule {
+  table-layout: fixed;
+  width: 970px;
+  overflow-wrap: break-word;
+}
+#tableHeaderCRule td {
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+#usernamedisplay {
+  text-shadow: none;
+  position: absolute;
+  color: black;
+  top: 30px;
+  left: 870px;
+}
