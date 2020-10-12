@@ -260,7 +260,7 @@ import {
   epCreateTimeRange,
   epLoadProject,
   epLoadTemplate,
-  epLoadTempAttrInfo
+  epLoadTempAttrInfo,
 } from "../main";
 import mixin from "../mixins/Mixins";
 
@@ -274,11 +274,11 @@ export default {
           excludeTime: "",
           timeModelFrom: {
             HH: "",
-            mm: ""
+            mm: "",
           },
           timeModelTo: {
             HH: "",
-            mm: ""
+            mm: "",
           },
           sun: "",
           mon: "",
@@ -286,8 +286,8 @@ export default {
           wed: "",
           thu: "",
           fri: "",
-          sat: ""
-        }
+          sat: "",
+        },
       ],
       formSubmitted: false,
       projectEntity: null,
@@ -320,11 +320,11 @@ export default {
       tmRangeFlag: 1,
       endTime: 0,
       shiftCount: 0,
-      shiftCountTemp: 0
+      shiftCountTemp: 0,
     };
   },
   components: {
-    DatePicker
+    DatePicker,
   },
   mounted() {
     this.fnFetchProject();
@@ -336,7 +336,7 @@ export default {
       this.$loading.show({ delay: 0 });
       this.fnClearAttributes();
       axios.get(epLoadTemplateById + event.target.value).then(
-        response => {
+        (response) => {
           this.templateList = response.data.ruleTemplates;
           if (this.templateList.length > 0) {
             this.fnLaodTeampAttrInfo();
@@ -346,7 +346,7 @@ export default {
             this.$loading.hide();
           }
         },
-        error => {
+        (error) => {
           this.$toast.error("Something went wrong. Please contact Admin.");
           this.$loading.hide();
         }
@@ -355,9 +355,9 @@ export default {
     fnLaodTeampAttrInfo() {
       this.$loading.show({ delay: 0 });
       axios.get(epLoadTempAttrInfo + this.template).then(
-        response => {
+        (response) => {
           this.templateAttrInfo = response.data.templateAttributeDtls;
-          this.templateAttrInfo.forEach(element => {
+          this.templateAttrInfo.forEach((element) => {
             let obj = {
               attrName: element.templateAttributeName,
               attrValue: "",
@@ -366,29 +366,26 @@ export default {
               isAction: element.isAction,
               attrOrder: element.attributeOrder,
               attrJsonKey: element.jsonKey,
-              attrIsSelect: element.isSelect
+              attrIsSelect: element.isSelect,
             };
             this.tempAttrList.push(obj);
           });
           this.$loading.hide();
         },
-        error => {
+        (error) => {
           this.$toast.error("Something went wrong. Please contact Admin.");
           this.$loading.hide();
         }
       );
     },
     fnCreateCircuitRule() {
-      console.log("in");
-
       this.$loading.show({ delay: 0 });
-      console.log("passed");
-
       this.circuitRuleArr = [];
       this.circuitRuleReq = [];
       this.tmRangeFlag = 1;
       let x = true;
       let flag = this.datePickerValidation();
+
       if (flag == false) {
         return flag;
       }
@@ -399,10 +396,10 @@ export default {
         createdBy: secureLS.get("cuid"),
         updatedBy: secureLS.get("cuid"),
         effStartTime: this.effStart,
-        effEndTime: this.effEnd
+        effEndTime: this.effEnd,
       };
 
-      Array.from(this.tempAttrList).forEach(obj => {
+      Array.from(this.tempAttrList).forEach((obj) => {
         if (
           obj.attrJsonKey == "clearTime" ||
           obj.attrJsonKey == "networkId" ||
@@ -419,7 +416,7 @@ export default {
 
         circuitRuleArr[obj.attrJsonKey] = obj.attrValue;
       });
-
+      this.$loading.show({ delay: 0 });
       if (!this.validFlag) {
         this.$loading.hide();
         this.validFlag = true;
@@ -432,41 +429,43 @@ export default {
         }
         let circuitRuleReq = [];
         circuitRuleReq.push(circuitRuleArr);
+        console.log("Request-body:--" + JSON.stringify(circuitRuleReq));
         let rule_ids = [];
 
         axios
           .post(epCreateCircuitRule, circuitRuleReq)
           .then(
-            data => {
+            (data) => {
               if (data.data.statusCode == 200) {
                 rule_ids = data.data.ruleId;
                 if (this.apiReq.length == 0) {
                   this.$toast.error("Kindly provide Active Time");
-
+                  this.$loading.hide();
                   return false;
                 }
                 if (this.tmRangeFlag == 1) {
-                  this.setRuleIdForEffTime(rule_ids[0].value);
+                  this.setRuleIdForEffTime(rule_ids[0]);
                 }
               } else {
                 this.$loading.hide();
                 this.$toast.error("Failed to create rule.");
               }
             },
-            error => {
-              this.$toast.error("Unable to create rule.");
+            (error) => {
               this.$loading.hide();
+              this.$toast.error("Unable to create rule.");
             }
           )
-          .catch(data => {});
+          .catch((data) => {});
       }
     },
     createTimeRange() {
-      this.$loading.hide();
+      //this.$loading.hide();
       this.apiReq = [];
       this.endTime = 0;
+
       this.shiftCountTemp = this.shiftCount = 0;
-      this.timeList.forEach(element => {
+      this.timeList.forEach((element) => {
         this.shiftCountTemp = this.shiftCount;
 
         if (
@@ -511,6 +510,26 @@ export default {
         ) {
           this.createTimeRangeRequest(6, element);
         }
+
+        if (
+          (element.timeModelFrom.HH != "" && element.timeModelFrom.mm != "") ||
+          (element.timeModelTo.HH != "" && element.timeModelTo.mm != "")
+        ) {
+          if (
+            element.sun != true &&
+            element.mon != true &&
+            element.tue != true &&
+            element.wed != true &&
+            element.thu != true &&
+            element.fri != true &&
+            element.sat != true &&
+            element.excludeTime != true
+          ) {
+            this.errTmRngMsg = "Kindly Select the day";
+            this.tmRangeFlag = 0;
+            this.$loading.hide();
+          }
+        }
       });
 
       //--------------------------------------------------
@@ -524,6 +543,7 @@ export default {
         element.timeModelFrom == null ||
         element.timeModelTo == null
       ) {
+        this.$loading.hide();
         this.errTmRngMsg = "Kindly provide Active Time For Day selected";
         this.tmRangeFlag = 0;
       } else {
@@ -541,34 +561,40 @@ export default {
         if (start_time >= end_time) {
           this.errTmRngMsg = "Active StartTime cannot be greater than EndTime.";
           this.tmRangeFlag = 0;
+          this.$loading.hide();
         }
+
         ++this.shiftCount;
         if (this.endTime == 0 || this.endTime < start_time) {
           this.endTime = end_time;
           console.log("if: " + start_time + "|" + this.endTime);
-        } else if (this.shiftCountTemp != this.shiftCount) {
+        } else if (
+          this.shiftCountTemp != this.shiftCount &&
+          this.endTime < this.end_time
+        ) {
           console.log("else: " + start_time + "|" + this.endTime);
           this.errTmRngMsg = "Shifts are overlapping";
+          this.$loading.hide();
           this.tmRangeFlag = 0;
         }
 
         let obj = {
           ruleId: "",
           startTime: start_time,
-          endTime: end_time
+          endTime: end_time,
         };
         this.apiReq.push(obj);
       }
     },
     setRuleIdForEffTime(ruleId) {
-      this.apiReq.forEach(element => {
+      this.apiReq.forEach((element) => {
         element.ruleId = ruleId;
       });
       console.log("FinalReq>>>>: " + JSON.stringify(this.apiReq));
       axios
         .post(epCreateTimeRange, this.apiReq)
         .then(
-          data => {
+          (data) => {
             if (data.data.statusCode == 200) {
               this.$toast.open("Circuit Rule Created Successfully.");
               this.formSubmitted = false;
@@ -580,12 +606,12 @@ export default {
               this.$toast.error("Failed to set active time");
             }
           },
-          error => {
+          (error) => {
             this.$toast.error("Unable to set active time.");
             this.$loading.hide();
           }
         )
-        .catch(data => {});
+        .catch((data) => {});
     },
 
     dynamicTimeRangeModel() {
@@ -596,11 +622,11 @@ export default {
           excludeTime: "",
           timeModelFrom: {
             HH: "",
-            mm: ""
+            mm: "",
           },
           timeModelTo: {
             HH: "",
-            mm: ""
+            mm: "",
           },
           sun: "",
           mon: "",
@@ -608,7 +634,7 @@ export default {
           wed: "",
           thu: "",
           fri: "",
-          sat: ""
+          sat: "",
         };
 
         this.timeList.push(obj);
@@ -619,11 +645,11 @@ export default {
       this.fnClearProject();
       var url_project = epLoadProject + "?domainId=22";
       axios.get(url_project).then(
-        response => {
+        (response) => {
           this.projectEntity = response.data.agRuleProjectEntity;
           this.$loading.hide();
         },
-        error => {
+        (error) => {
           this.$toast.error("Something went wrong.Please contact admin");
           this.$loading.hide();
         }
@@ -636,11 +662,11 @@ export default {
       var url_template = epLoadTemplate + event.target.value;
 
       axios.get(url_template).then(
-        response => {
+        (response) => {
           this.templateEntities = response.data.ruleTemplates;
           this.$loading.hide();
         },
-        error => {
+        (error) => {
           this.$toast.error("Something went wrong. Please contact admin");
           this.$loading.hide();
         }
@@ -665,11 +691,11 @@ export default {
       this.template = "";
       this.effStart = "";
       this.effEnd = "";
-      //this.clearTimeList();
+      this.clearTimeList();
     },
     handleSubmit(e) {
       this.formSubmitted = true;
-      this.$validator.validate().then(valid => {
+      this.$validator.validate().then((valid) => {
         if (valid) {
           this.fnCreateCircuitRule();
         }
@@ -678,15 +704,18 @@ export default {
     datePickerValidation() {
       if (this.effStart == "" && this.effEnd == "") {
         this.$toast.error("Select Start Date and End Date");
+        this.$loading.hide();
         return false;
       } else if (this.effStart > this.effEnd) {
         this.$toast.error("Start Date must be less than End Date");
+        this.$loading.hide();
         return false;
       }
+      this.$loading.hide();
       return true;
     },
     clearTimeList() {
-      this.timeList.forEach(element => {
+      this.timeList.forEach((element) => {
         (element.excludeTime = ""),
           (element.timeModelFrom.HH = ""),
           (element.timeModelTo.HH = ""),
@@ -700,12 +729,12 @@ export default {
           (element.fri = ""),
           (element.sat = "");
       });
-    }
+    },
   },
 
   components: {
-    CircuitNav
-  }
+    CircuitNav,
+  },
 };
 </script>
 

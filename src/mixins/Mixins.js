@@ -60,6 +60,7 @@ export default {
         return false;
       }
       // }
+      this.$loading.hide();
       return true;
     }
   }

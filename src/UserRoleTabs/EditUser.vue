@@ -154,14 +154,14 @@ import {
   epUpdateUserRole,
   epDeleteUserRole,
   admin,
-  superUser
+  superUser,
 } from "../main";
 
 import mixin from "../mixins/Mixins";
 export default {
   mixins: [mixin],
   components: {
-    UserRolePage
+    UserRolePage,
   },
   data() {
     return {
@@ -182,7 +182,7 @@ export default {
       pageOfItems: [],
       intPage: 1,
       pgSize: 5,
-      user_role: secureLS.get("userRole")
+      user_role: secureLS.get("userRole"),
     };
   },
   mounted() {
@@ -190,18 +190,19 @@ export default {
   },
   methods: {
     fnLoadUser() {
-      axios.get(epLoadUserRole).then(response => {
+      axios.get(epLoadUserRole).then((response) => {
         this.userList = response.data.agUserRoleEntity;
       });
     },
     onChangePage(pageOfItems) {
       this.pageOfItems = pageOfItems;
     },
-    updateUser: function() {
+    updateUser: function () {
+      this.$loading.show({ delay: 0 });
       this.editedRecordArr = [];
       let flag = 0;
-      this.editUserIdArr.forEach(val => {
-        let userData = this.userList.find(i => i.userRoleId == val);
+      this.editUserIdArr.forEach((val) => {
+        let userData = this.userList.find((i) => i.userRoleId == val);
         if (flag == 0 && (userData.cuid == "" || userData.userName == "")) {
           flag = 1;
         }
@@ -214,32 +215,35 @@ export default {
           updatedBy: secureLS.get("cuid"),
           userRoleId: userData.userRoleId,
           createdTime: userData.createdTime,
-          updatedTime: userData.updatedTime
+          updatedTime: userData.updatedTime,
         };
 
         this.editedRecordArr.push(updateUserArray);
       });
       if (flag == 1) {
+        this.$loading.hide();
         this.$toast.error("Blank value not allowed");
         return false;
       }
       axios.put(epUpdateUserRole, this.editedRecordArr).then(() => {
+        this.$loading.hide();
         this.$toast.open("User Updated Successfully");
         this.loadUsers();
       });
     },
-    addEditedUserIndex: function(userRoleId) {
+    addEditedUserIndex: function (userRoleId) {
       this.colorFlag = userRoleId;
       if (!this.editUserIdArr.includes(userRoleId)) {
         // It checks this   index is available or not in the Array
         this.editUserIdArr.push(userRoleId);
       }
     },
-    deleteUser: function() {
+    deleteUser: function () {
+      this.$loading.show({ delay: 0 });
       this.deleteRecordArr = [];
 
-      this.deleteUserIdArr.forEach(val => {
-        let userData = this.userList.find(i => i.userRoleId == val);
+      this.deleteUserIdArr.forEach((val) => {
+        let userData = this.userList.find((i) => i.userRoleId == val);
         let deleteUserArray = {
           isActive: userData.isActive,
           createdBy: userData.createdBy,
@@ -249,23 +253,24 @@ export default {
           updatedBy: secureLS.get("cuid"),
           userRoleId: userData.userRoleId,
           createdTime: userData.createdTime,
-          updatedTime: userData.updatedTime
+          updatedTime: userData.updatedTime,
         };
         this.deleteRecordArr.push(deleteUserArray);
       });
       axios
         .delete(epDeleteUserRole, {
-          data: this.deleteRecordArr
+          data: this.deleteRecordArr,
         })
         .then(() => {
+          this.$loading.hide();
           this.$toast.open("User Deleted Successfully");
           this.loadUsers();
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     },
-    addDeleteUserIndex: function(event, userRoleId) {
+    addDeleteUserIndex: function (event, userRoleId) {
       if (event.target.checked) {
         this.deleteUserIdArr.push(userRoleId);
       } else {
@@ -276,13 +281,13 @@ export default {
       this.beforEditCache = users;
       this.editedUser = users;
     },
-    loadUsers: function() {
+    loadUsers: function () {
       this.editUserIdArr = [];
       this.deleteUserIdArr = [];
 
       this.fnLoadUser();
-    }
-  }
+    },
+  },
 };
 </script>
 

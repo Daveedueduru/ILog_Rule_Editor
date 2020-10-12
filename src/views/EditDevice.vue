@@ -424,7 +424,7 @@ import {
   superUser,
   admin,
   epLoadTimeRange,
-  epUpdateTimeRange
+  epUpdateTimeRange,
 } from "../main";
 import mixin from "../mixins/Mixins";
 export default {
@@ -475,11 +475,11 @@ export default {
       tmRangeFlag: 1,
       shiftCountTemp: 0,
       shiftCount: 0,
-      endTime: 0
+      endTime: 0,
     };
   },
   components: {
-    DeviceNav
+    DeviceNav,
   },
   mounted() {
     this.domain = "";
@@ -500,11 +500,11 @@ export default {
 
       var url_project = epLoadProject + "?domainId=2";
       axios.get(url_project).then(
-        response => {
+        (response) => {
           this.projectList = response.data.agRuleProjectEntity;
           this.$loading.hide();
         },
-        error => {
+        (error) => {
           this.$toast.error("Something went wrong. Please contact Admin.");
           this.$loading.hide();
         }
@@ -519,11 +519,11 @@ export default {
       this.deviceList = [];
       var url_template = epLoadTemplate + event.target.value;
       axios.get(url_template).then(
-        response => {
+        (response) => {
           this.templateEntities = response.data.ruleTemplates;
           this.$loading.hide();
         },
-        error => {
+        (error) => {
           this.$toast.error("Something went wrong. Please contact Admin.");
           this.$loading.hide();
         }
@@ -535,11 +535,11 @@ export default {
     setFlagDisable() {
       this.disableFlag = true;
     },
-    deleteDevice: function(event) {
+    deleteDevice: function (event) {
       this.deleteRecordArr = [];
       this.$loading.show({ delay: 0 });
-      this.deleteDeviceIdArr.forEach(val => {
-        let deviceData = this.deviceList.find(i => i.ruleId == val);
+      this.deleteDeviceIdArr.forEach((val) => {
+        let deviceData = this.deviceList.find((i) => i.ruleId == val);
 
         deviceData.updatedBy = secureLS.get("cuid");
         deviceData.effStartTime = this.effStart;
@@ -549,10 +549,10 @@ export default {
       });
       axios
         .delete(epDeleteDeviceRule, {
-          data: this.deleteRecordArr
+          data: this.deleteRecordArr,
         })
         .then(
-          data => {
+          (data) => {
             if (data.data.statusCode == 200) {
               this.$toast.success("Device Rule Deleted Successfully !!");
               this.fnFilterDevice();
@@ -562,17 +562,17 @@ export default {
               this.$loading.hide();
             }
           },
-          error => {
+          (error) => {
             this.$toast.error("Device delete failed.");
             this.$loading.hide();
           }
         )
-        .catch(function(error) {
+        .catch(function (error) {
           this.$toast.error(error);
           this.$loading.hide();
         });
     },
-    addDeleteDeviceIndex: function(event, ruleId) {
+    addDeleteDeviceIndex: function (event, ruleId) {
       if (event.target.checked) {
         if (!this.deleteDeviceIdArr.includes(ruleId)) {
           this.deleteDeviceIdArr.push(ruleId);
@@ -586,10 +586,12 @@ export default {
     },
     fnLaodTeampAttrInfo(deviceRuleId) {
       this.setFlagDisable();
-      let projectObj = this.projectList.find(i => i.projectId == this.project);
+      let projectObj = this.projectList.find(
+        (i) => i.projectId == this.project
+      );
       this.projectName = projectObj.projectName;
       this.tempAttrList = [];
-      this.selectedRule = this.deviceList.find(i => i.ruleId == deviceRuleId);
+      this.selectedRule = this.deviceList.find((i) => i.ruleId == deviceRuleId);
       if (
         this.selectedRule.effStartTime != undefined &&
         this.selectedRule.effStartTime != ""
@@ -608,7 +610,7 @@ export default {
       }
       this.selectedRuleId = deviceRuleId;
 
-      this.maintemplateAttrInfo.forEach(element => {
+      this.maintemplateAttrInfo.forEach((element) => {
         let obj = {};
         if (this.selectedRule[element.jsonKey]) {
           obj["attrName"] = element.templateAttributeName;
@@ -625,10 +627,10 @@ export default {
           this.tempAttrList.push(obj);
         }
       });
-      axios.get(epLoadTimeRange + deviceRuleId).then(response => {
+      axios.get(epLoadTimeRange + deviceRuleId).then((response) => {
         this.timeList = response.data.ruleTimeRangeList;
 
-        this.timeList.forEach(item => {
+        this.timeList.forEach((item) => {
           let shour = (item.startTime / 60).toFixed(0);
           let smin = (item.startTime % 60).toFixed(0);
           if (shour < 10) {
@@ -647,11 +649,11 @@ export default {
           }
           item.startTime = {
             HH: shour,
-            mm: smin
+            mm: smin,
           };
           item.endTime = {
             HH: ehour,
-            mm: emin
+            mm: emin,
           };
         });
 
@@ -667,7 +669,7 @@ export default {
             wed: false,
             thu: false,
             fri: false,
-            sat: false
+            sat: false,
           };
           this.timeList.push(item);
         }
@@ -689,7 +691,7 @@ export default {
           wed: false,
           thu: false,
           fri: false,
-          sat: false
+          sat: false,
         };
 
         this.timeList.push(obj);
@@ -699,7 +701,7 @@ export default {
       this.$loading.show({ delay: 0 });
       this.showTable = false;
       this.vendorList = [];
-      axios.get(epLoadTempAttrInfo + this.template).then(response => {
+      axios.get(epLoadTempAttrInfo + this.template).then((response) => {
         this.maintemplateAttrInfo = response.data.templateAttributeDtls;
         this.extratemplateAttrInfo = this.maintemplateAttrInfo.filter(
           (word, key) => key > 5
@@ -712,13 +714,13 @@ export default {
         this.deviceList = [];
 
         axios.get(epLoadDeviceRule + "?templateId=" + this.template).then(
-          response => {
+          (response) => {
             let dataArr = response.data.deviceRuleInfoEntity;
             if (dataArr.length > 0) {
-              dataArr.forEach(val => {
+              dataArr.forEach((val) => {
                 let obj = {};
                 let objVendor = {};
-                this.maintemplateAttrInfo.forEach(element => {
+                this.maintemplateAttrInfo.forEach((element) => {
                   obj[element.jsonKey] = val[element.jsonKey];
                 });
                 obj["ruleId"] = val.ruleId;
@@ -742,7 +744,7 @@ export default {
             }
             this.$loading.hide();
           },
-          error => {
+          (error) => {
             this.$toast.error("Something went wrong. Please contact Admin.");
             this.$loading.hide();
           }
@@ -751,9 +753,9 @@ export default {
     },
     addHeader(event) {
       let nwhead = this.extratemplateAttrInfo.find(
-        word => word.templateAttributeId == event.target.value
+        (word) => word.templateAttributeId == event.target.value
       );
-      this.extratemplateAttrInfo = this.extratemplateAttrInfo.filter(function(
+      this.extratemplateAttrInfo = this.extratemplateAttrInfo.filter(function (
         el
       ) {
         return el.templateAttributeId != event.target.value;
@@ -787,10 +789,10 @@ export default {
         createdBy: secureLS.get("cuid"),
         updatedBy: secureLS.get("cuid"),
         effStartTime: this.effStart,
-        effEndTime: this.effEnd
+        effEndTime: this.effEnd,
       };
 
-      Array.from(this.tempAttrList).forEach(obj => {
+      Array.from(this.tempAttrList).forEach((obj) => {
         if (
           obj.attrJsonKey == "clearTime" ||
           obj.attrJsonKey == "networkId" ||
@@ -822,7 +824,7 @@ export default {
         axios
           .put(epUpdateDeviceRule, deviceRuleReq)
           .then(
-            data => {
+            (data) => {
               if (data.data.statusCode == 200) {
                 if (this.apiReq.length == 0) {
                   this.$toast.error("Kindly provide Active Time");
@@ -840,12 +842,12 @@ export default {
                 this.$loading.hide();
               }
             },
-            error => {
+            (error) => {
               this.$toast.error("Something went wrong. Please contact Admin.");
               this.$loading.hide();
             }
           )
-          .catch(data => {});
+          .catch((data) => {});
       }
     },
 
@@ -855,7 +857,7 @@ export default {
 
       this.endTime = 0;
       this.shiftCountTemp = this.shiftCount = 0;
-      this.timeList.forEach(element => {
+      this.timeList.forEach((element) => {
         this.shiftCountTemp = this.shiftCount;
 
         if (
@@ -932,7 +934,10 @@ export default {
         if (this.endTime == 0 || this.endTime < start_time) {
           this.endTime = end_time;
           console.log("if: " + start_time + "|" + this.endTime);
-        } else if (this.shiftCountTemp != this.shiftCount) {
+        } else if (
+          this.shiftCountTemp != this.shiftCount &&
+          this.endTime < this.end_time
+        ) {
           console.log("else: " + start_time + "|" + this.endTime);
           this.errTmRngMsg = "Shifts are overlapping";
           this.tmRangeFlag = 0;
@@ -940,13 +945,13 @@ export default {
         let obj = {
           ruleId: "",
           startTime: start_time,
-          endTime: end_time
+          endTime: end_time,
         };
         this.apiReq.push(obj);
       }
     },
     setRuleIdForEffTime(ruleId) {
-      this.apiReq.forEach(element => {
+      this.apiReq.forEach((element) => {
         element.ruleId = this.selectedRuleId;
       });
       //--------------------------------------------------
@@ -954,25 +959,26 @@ export default {
       axios
         .put(epUpdateTimeRange, this.apiReq)
         .then(
-          data => {
+          (data) => {
             if (data.data.statusCode == 200) {
               this.$loading.hide();
               this.$toast.open("Device Rule updated Successfully.");
               this.formSubmitted = false;
               this.tempAttrList = [];
-              this.setDefault();
+              //this.setDefault();
+              this.fnFilterDevice();
               this.$loading.hide();
             } else {
               this.$loading.hide();
               this.$toast.error("Failed to set active time");
             }
           },
-          error => {
+          (error) => {
             this.$toast.error("Unable to set active time.");
             this.$loading.hide();
           }
         )
-        .catch(data => {});
+        .catch((data) => {});
     },
 
     fnFilterVendor(event) {
@@ -980,13 +986,13 @@ export default {
         this.deviceList = this.deviceListMain;
       } else {
         this.deviceList = this.deviceListMain.filter(
-          ele => ele.vendor == event.target.value
+          (ele) => ele.vendor == event.target.value
         );
       }
     },
     handleSubmit(e) {
       this.formSubmitted = true;
-      this.$validator.validate().then(valid => {
+      this.$validator.validate().then((valid) => {
         if (valid) {
           this.fnUpdateDeveciRule();
         }
@@ -1006,8 +1012,8 @@ export default {
         return false;
       }
       return true;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

@@ -81,10 +81,10 @@ export default {
           this.users = response.data.agUserRoleEntity;
           if (this.users.length == 0) {
             console.log("========= If");
-            
+
             secureLS.set("userRole", normalUser);
           } else {
-             console.log("========= else");
+            console.log("========= else");
             this.users.forEach(element => {
               this.userName = element.userName;
               // secureLS.set("userName", element.userName);
@@ -92,7 +92,7 @@ export default {
               secureLS.set("cuid", element.cuid);
             });
           }
-           this.$router.push("/home");
+          this.$router.push("/home");
         })
         .catch(error => {
           self.errorMessage = "No UserRole Found!";

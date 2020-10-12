@@ -1,9 +1,9 @@
 "use strict";
 module.exports = {
   NODE_ENV: '"production"',
-  CONFLUX_URL: '"http://10.206.156.153:8080"',
-  //ILOG_RULE_URL: '"http://aammidc01-test:8080/aamm"',
-  ILOG_RULE_URL: '"http://localhost:8080/aamm"',
+  CONFLUX_URL: '"http://dashtesttomcat:8181"',
+  ILOG_RULE_URL: '"http://aammidc01-test:8080/aamm"',
+  //ILOG_RULE_URL: '"http://localhost:8080/aamm"',
 
   EP_LOAD_TEMPLATE: '"/rules/template/view?projectId="',
   EP_LOAD_TEMPLATE_BY_ID: '"/rules/template/view?templateId="',

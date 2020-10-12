@@ -405,7 +405,7 @@ import {
   admin,
   superUser,
   epLoadTimeRange,
-  epUpdateTimeRange
+  epUpdateTimeRange,
 } from "../main";
 import mixin from "../mixins/Mixins";
 export default {
@@ -452,11 +452,11 @@ export default {
       tmRangeFlag: 1,
       shiftCountTemp: 0,
       shiftCount: 0,
-      endTime: 0
+      endTime: 0,
     };
   },
   components: {
-    CircuitNav
+    CircuitNav,
   },
   mounted() {
     this.domain = "";
@@ -476,11 +476,11 @@ export default {
       this.circuitList = [];
       var url_project = epLoadProject + "?domainId=22";
       axios.get(url_project).then(
-        response => {
+        (response) => {
           this.projectList = response.data.agRuleProjectEntity;
           this.$loading.hide();
         },
-        error => {
+        (error) => {
           this.$toast.error("Something went wrong. Please contact Admin.");
           this.$loading.hide();
         }
@@ -493,11 +493,11 @@ export default {
       this.circuitList = [];
       var url_template = epLoadTemplate + event.target.value;
       axios.get(url_template).then(
-        response => {
+        (response) => {
           this.templateEntities = response.data.ruleTemplates;
           this.$loading.hide();
         },
-        error => {
+        (error) => {
           this.$toast.error("Something went wrong. Please contact Admin.");
           this.$loading.hide();
         }
@@ -506,7 +506,7 @@ export default {
     fnFilterCircuit() {
       this.$loading.show({ delay: 0 });
       this.showTable = false;
-      axios.get(epLoadTempAttrInfo + this.template).then(response => {
+      axios.get(epLoadTempAttrInfo + this.template).then((response) => {
         this.maintemplateAttrInfo = response.data.templateAttributeDtls;
         this.extratemplateAttrInfo = this.maintemplateAttrInfo.filter(
           (word, key) => key > 4
@@ -517,13 +517,13 @@ export default {
         this.deleteCircuitIdArr = [];
         this.circuitList = [];
         axios.get(epLoadCircuitRule + "?templateId=" + this.template).then(
-          response => {
+          (response) => {
             let dataArr = response.data.circuitRuleInfoEntity;
 
             if (dataArr.length > 0) {
-              dataArr.forEach(val => {
+              dataArr.forEach((val) => {
                 let obj = {};
-                this.maintemplateAttrInfo.forEach(element => {
+                this.maintemplateAttrInfo.forEach((element) => {
                   obj[element.jsonKey] = val[element.jsonKey];
                 });
                 obj["ruleId"] = val.ruleId;
@@ -543,7 +543,7 @@ export default {
             }
             this.$loading.hide();
           },
-          error => {
+          (error) => {
             this.$toast.error("Something went wrong. Please contact Admin.");
             this.$loading.hide();
           }
@@ -558,11 +558,11 @@ export default {
     setFlagDisable() {
       this.disableFlag = true;
     },
-    deleteCircuit: function(event) {
+    deleteCircuit: function (event) {
       this.deleteRecordArr = [];
       this.$loading.show({ delay: 0 });
-      this.deleteCircuitIdArr.forEach(val => {
-        let circuitData = this.circuitList.find(i => i.ruleId == val);
+      this.deleteCircuitIdArr.forEach((val) => {
+        let circuitData = this.circuitList.find((i) => i.ruleId == val);
 
         circuitData.updatedBy = secureLS.get("cuid");
 
@@ -574,10 +574,10 @@ export default {
       console.log(this.deleteRecordArr);
       axios
         .delete(epDeleteCircuitRule, {
-          data: this.deleteRecordArr
+          data: this.deleteRecordArr,
         })
         .then(
-          data => {
+          (data) => {
             if (data.data.statusCode == 200) {
               this.$toast.open("Circuit Rule Deleted Successfully");
               this.fnFilterCircuit();
@@ -587,16 +587,16 @@ export default {
               this.$loading.hide();
             }
           },
-          error => {
+          (error) => {
             this.$toast.error("Circuit delete failed.");
             this.$loading.hide();
           }
         )
-        .catch(function(error) {
+        .catch(function (error) {
           this.$loading.hide();
         });
     },
-    addDeleteCircuitIndex: function(event, ruleId) {
+    addDeleteCircuitIndex: function (event, ruleId) {
       if (event.target.checked) {
         if (!this.deleteCircuitIdArr.includes(ruleId)) {
           this.deleteCircuitIdArr.push(ruleId);
@@ -610,10 +610,14 @@ export default {
     },
     fnLaodTeampAttrInfo(circuitRuleId) {
       this.setFlagDisable();
-      let projectObj = this.projectList.find(i => i.projectId == this.project);
+      let projectObj = this.projectList.find(
+        (i) => i.projectId == this.project
+      );
       this.projectName = projectObj.projectName;
       this.tempAttrList = [];
-      this.selectedRule = this.circuitList.find(i => i.ruleId == circuitRuleId);
+      this.selectedRule = this.circuitList.find(
+        (i) => i.ruleId == circuitRuleId
+      );
       if (
         this.selectedRule.effStartTime != undefined &&
         this.selectedRule.effStartTime != ""
@@ -633,7 +637,7 @@ export default {
 
       this.selectedRuleId = circuitRuleId;
 
-      this.maintemplateAttrInfo.forEach(element => {
+      this.maintemplateAttrInfo.forEach((element) => {
         let obj = {};
         if (this.selectedRule[element.jsonKey]) {
           obj["attrName"] = element.templateAttributeName;
@@ -651,10 +655,10 @@ export default {
           this.tempAttrList.push(obj);
         }
       });
-      axios.get(epLoadTimeRange + circuitRuleId).then(response => {
+      axios.get(epLoadTimeRange + circuitRuleId).then((response) => {
         this.timeList = response.data.ruleTimeRangeList;
 
-        this.timeList.forEach(item => {
+        this.timeList.forEach((item) => {
           let shour = (item.startTime / 60).toFixed(0);
           let smin = (item.startTime % 60).toFixed(0);
           if (shour < 10) {
@@ -673,11 +677,11 @@ export default {
           }
           item.startTime = {
             HH: shour,
-            mm: smin
+            mm: smin,
           };
           item.endTime = {
             HH: ehour,
-            mm: emin
+            mm: emin,
           };
         });
 
@@ -693,7 +697,7 @@ export default {
             wed: false,
             thu: false,
             fri: false,
-            sat: false
+            sat: false,
           };
           this.timeList.push(item);
         }
@@ -717,7 +721,7 @@ export default {
           wed: false,
           thu: false,
           fri: false,
-          sat: false
+          sat: false,
         };
 
         this.timeList.push(obj);
@@ -742,9 +746,9 @@ export default {
         createdBy: secureLS.get("cuid"),
         updatedBy: secureLS.get("cuid"),
         effStartTime: this.effStart,
-        effEndTime: this.effEnd
+        effEndTime: this.effEnd,
       };
-      Array.from(this.tempAttrList).forEach(obj => {
+      Array.from(this.tempAttrList).forEach((obj) => {
         if (
           obj.attrJsonKey == "clearTime" ||
           obj.attrJsonKey == "networkId" ||
@@ -778,7 +782,7 @@ export default {
         axios
           .put(epUpdateCircuitRule, circuitRuleReq)
           .then(
-            data => {
+            (data) => {
               if (data.data.statusCode == 200) {
                 if (this.apiReq.length == 0) {
                   this.$toast.error("Kindly provide Active Time");
@@ -794,12 +798,12 @@ export default {
                 this.$loading.hide();
               }
             },
-            error => {
+            (error) => {
               this.$toast.error("Something went wrong. Please contact Admin.");
               this.$loading.hide();
             }
           )
-          .catch(data => {});
+          .catch((data) => {});
       }
     },
     updateTimeRange() {
@@ -807,7 +811,7 @@ export default {
       this.apiReq = [];
       this.endTime = 0;
       this.shiftCountTemp = this.shiftCount = 0;
-      this.timeList.forEach(element => {
+      this.timeList.forEach((element) => {
         this.shiftCountTemp = this.shiftCount;
 
         if (
@@ -881,11 +885,17 @@ export default {
           this.tmRangeFlag = 0;
         }
         ++this.shiftCount;
+        console.log(
+          "Before else: " + this.shiftCountTemp + "|" + this.shiftCount
+        );
         if (this.endTime == 0 || this.endTime < start_time) {
           this.endTime = end_time;
           console.log("if: " + start_time + "|" + this.endTime);
-        } else if (this.shiftCountTemp != this.shiftCount) {
-          console.log("else: " + start_time + "|" + this.endTime);
+        } else if (
+          this.shiftCountTemp != this.shiftCount &&
+          this.endTime < this.end_time
+        ) {
+          console.log("else: " + this.shiftCountTemp + "|" + this.shiftCount);
           this.errTmRngMsg = "Shifts are overlapping";
           this.tmRangeFlag = 0;
         }
@@ -893,13 +903,13 @@ export default {
         let obj = {
           ruleId: "",
           startTime: start_time,
-          endTime: end_time
+          endTime: end_time,
         };
         this.apiReq.push(obj);
       }
     },
     setRuleIdForEffTime(ruleId) {
-      this.apiReq.forEach(element => {
+      this.apiReq.forEach((element) => {
         element.ruleId = this.selectedRuleId;
       });
       //--------------------------------------------------
@@ -907,32 +917,34 @@ export default {
       axios
         .put(epUpdateTimeRange, this.apiReq)
         .then(
-          data => {
+          (data) => {
             if (data.data.statusCode == 200) {
               this.$loading.hide();
               this.$toast.open("Circuit Rule updated Successfully.");
+
               this.formSubmitted = false;
               this.tempAttrList = [];
-              this.setDefault();
+              //this.setDefault();
+              this.fnFilterCircuit();
               this.$loading.hide();
             } else {
               this.$loading.hide();
               this.$toast.error("Failed to set active time");
             }
           },
-          error => {
+          (error) => {
             this.$toast.error("Unable to set active time.");
             this.$loading.hide();
           }
         )
-        .catch(data => {});
+        .catch((data) => {});
     },
 
     addHeader(event) {
       let nwhead = this.extratemplateAttrInfo.find(
-        word => word.templateAttributeId == event.target.value
+        (word) => word.templateAttributeId == event.target.value
       );
-      this.extratemplateAttrInfo = this.extratemplateAttrInfo.filter(function(
+      this.extratemplateAttrInfo = this.extratemplateAttrInfo.filter(function (
         el
       ) {
         return el.templateAttributeId != event.target.value;
@@ -949,7 +961,7 @@ export default {
     },
     handleSubmit(e) {
       this.formSubmitted = true;
-      this.$validator.validate().then(valid => {
+      this.$validator.validate().then((valid) => {
         if (valid) {
           this.fnUpdateCircuitRule();
         }
@@ -969,8 +981,8 @@ export default {
         return false;
       }
       return true;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
